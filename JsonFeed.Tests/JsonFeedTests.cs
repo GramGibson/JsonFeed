@@ -98,5 +98,36 @@ namespace JsonFeed.Tests
 			Assert.Equal(5236920, feed.Items.First().Attachments.First().SizeInBytes);
 			Assert.Equal("4/25/2017 9:09:45 PM", feed.Items.First().DatePublished.ToString());
 		}
+
+		[Fact]
+		public void InvalidFeedWontSerialize()
+		{
+			var feed = new Feed();
+
+			var ex = Assert.Throws<ArgumentException>(() =>
+			{
+				JsonFeed.Serialize(feed);
+			});
+
+			Assert.Equal("Invalid version", ex.Message);
+
+			feed.Version = JsonFeed.Version;
+
+			ex = Assert.Throws<ArgumentException>(() =>
+			{
+				JsonFeed.Serialize(feed);
+			});
+
+			Assert.Equal("Invalid title", ex.Message);
+
+			feed.Title = "Feed Title";
+
+			ex = Assert.Throws<ArgumentException>(() =>
+			{
+				JsonFeed.Serialize(feed);
+			});
+
+			Assert.Equal("No items found", ex.Message);
+		}
 	}
 }

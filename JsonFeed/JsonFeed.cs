@@ -84,6 +84,21 @@ namespace JsonFeed
 
 		public static string Serialize(Feed feed)
 		{
+			if (string.IsNullOrWhiteSpace(feed.Version) || feed.Version != Version)
+			{
+				throw new ArgumentException("Invalid version");
+			}
+
+			if (string.IsNullOrWhiteSpace(feed.Title))
+			{
+				throw new ArgumentException("Invalid title");
+			}
+
+			if (feed.Items == null || !feed.Items.Any())
+			{
+				throw new ArgumentException("No items found");
+			}
+
 			return SimpleJson.SerializeObject(feed);
 		}
 	}
