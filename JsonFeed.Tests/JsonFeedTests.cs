@@ -129,5 +129,23 @@ namespace JsonFeed.Tests
 
 			Assert.Equal("No items found", ex.Message);
 		}
+
+		[Fact]
+		public void AllowInvalidJsonWhenSpecifyingNonStrictParsing()
+		{
+			var file = File.ReadAllText("../../Feeds/invalid.json");
+
+			Assert.Throws<ArgumentException>(() =>
+			{
+				JsonFeed.Parse(file);
+			});
+
+			var feed = JsonFeed.Parse(file, strictParsing: false);
+
+			Assert.Equal(null, feed.Version);
+			Assert.Equal(null, feed.Title);
+			Assert.Equal(0, feed.Items.Count());
+			Assert.Equal("JSON Feed is a pragmatic syndication format for blogs, microblogs, and other time-based content.", feed.Description);
+		}
 	}
 }

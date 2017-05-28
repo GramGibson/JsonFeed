@@ -14,7 +14,7 @@ namespace JsonFeed
 		{
 		}
 
-		public Attachment(IDictionary<string, object> json)
+		public Attachment(IDictionary<string, object> json, bool strictParsing = true)
 		{
 			if (json == null)
 			{
@@ -23,14 +23,14 @@ namespace JsonFeed
 
 			Url = json.GetValue<string>("url");
 
-			if (string.IsNullOrWhiteSpace(Url))
+			if (strictParsing && string.IsNullOrWhiteSpace(Url))
 			{
 				return;
 			}
 
 			MimeType = json.GetValue<string>("mime_type");
 
-			if (string.IsNullOrWhiteSpace(MimeType))
+			if (strictParsing && string.IsNullOrWhiteSpace(MimeType))
 			{
 				return;
 			}

@@ -25,7 +25,7 @@ namespace JsonFeed
 		{
 		}
 
-		public FeedItem(IDictionary<string, object> json)
+		public FeedItem(IDictionary<string, object> json, bool strictParsing = true)
 		{
 			if (json == null)
 			{
@@ -36,12 +36,12 @@ namespace JsonFeed
 			var contentHtml = json.GetValue<string>("content_html");
 			var contentText = json.GetValue<string>("content_text");
 
-			if (string.IsNullOrWhiteSpace(id))
+			if (strictParsing && string.IsNullOrWhiteSpace(id))
 			{
 				return;
 			}
 
-			if (string.IsNullOrWhiteSpace(contentHtml) && string.IsNullOrWhiteSpace(contentText))
+			if (strictParsing && (string.IsNullOrWhiteSpace(contentHtml) && string.IsNullOrWhiteSpace(contentText)))
 			{
 				return;
 			}
@@ -70,9 +70,17 @@ namespace JsonFeed
 
 			var attachmentsJson = json.GetList<IDictionary<string, object>>("attachments");
 
-			Attachments = attachmentsJson
-				.Select(s => new Attachment(s))
-				.Where(w => w.Url != null && w.MimeType != null);
+			if (strictParsing)
+			{
+				Attachments = attachmentsJson
+					.Select(s => new Attachment(s, strictParsing))
+					.Where(w => w.Url != null && w.MimeType != null);
+			}
+			else
+			{
+				Attachments = attachmentsJson
+					.Select(s => new Attachment(s, strictParsing));
+			}
 		}
 	}
 }

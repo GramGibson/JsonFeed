@@ -20,7 +20,7 @@ namespace JsonFeed
 		public IEnumerable<Hub> Hubs { get; set; }
 		public IEnumerable<FeedItem> Items { get; set; }
 
-		public static JsonFeed Parse(string jsonString)
+		public static JsonFeed Parse(string jsonString, bool strictParsing = true)
 		{
 			if (string.IsNullOrWhiteSpace(jsonString))
 			{
@@ -29,10 +29,10 @@ namespace JsonFeed
 
 			var json = SimpleJson.DeserializeObject(jsonString) as IDictionary<string, object>;
 
-			return Parse(json);
+			return Parse(json, strictParsing);
 		}
 
-		public static JsonFeed Parse(IDictionary<string, object> json)
+		public static JsonFeed Parse(IDictionary<string, object> json, bool strictParsing = true)
 		{
 			if (json == null)
 			{
@@ -42,17 +42,17 @@ namespace JsonFeed
 			var version = json.GetValue<string>("version");
 			var title = json.GetValue<string>("title");
 
-			if (string.IsNullOrWhiteSpace(version) || version != Extensions.CurrentJsonFeedVersion)
+			if (strictParsing && (string.IsNullOrWhiteSpace(version) || version != Extensions.CurrentJsonFeedVersion))
 			{
 				throw new ArgumentException("Invalid version");
 			}
 
-			if (string.IsNullOrWhiteSpace(title))
+			if (strictParsing && string.IsNullOrWhiteSpace(title))
 			{
 				throw new ArgumentException("Invalid title");
 			}
 
-			if (!json.ContainsKey("items"))
+			if (strictParsing && !json.ContainsKey("items"))
 			{
 				throw new ArgumentException("No items found");
 			}
@@ -80,16 +80,30 @@ namespace JsonFeed
 			{
 				var hubsJson = json.GetList<IDictionary<string, object>>("hubs");
 
-				feed.Hubs = hubsJson
-					.Where(w => w["type"] != null && w["url"] != null)
-					.Select(s => new Hub(s));
+				if (strictParsing)
+				{
+					feed.Hubs = hubsJson
+						.Where(w => w["type"] != null && w["url"] != null)
+						.Select(s => new Hub(s));
+				}
+				else
+				{
+					feed.Hubs = hubsJson.Select(s => new Hub(s));
+				}
 			}
 
 			var itemsJson = json.GetList<IDictionary<string, object>>("items");
 
-			feed.Items = itemsJson
-				.Where(w => w["id"] != null)
-				.Select(s => new FeedItem(s));
+			if (strictParsing)
+			{
+				feed.Items = itemsJson
+					.Where(w => w["id"] != null)
+					.Select(s => new FeedItem(s, strictParsing));
+			}
+			else
+			{
+				feed.Items = itemsJson.Select(s => new FeedItem(s));
+			}
 
 			return feed;
 		}
