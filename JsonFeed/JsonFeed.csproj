@@ -43,7 +43,6 @@
     <Compile Include="Attachment.cs" />
     <Compile Include="Author.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Feed.cs" />
     <Compile Include="FeedItem.cs" />
     <Compile Include="Hub.cs" />
     <Compile Include="JsonFeed.cs" />

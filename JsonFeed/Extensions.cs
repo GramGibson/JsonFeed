@@ -4,6 +4,8 @@ namespace JsonFeed
 {
 	public static class Extensions
 	{
+		public static string CurrentJsonFeedVersion { get; } = "https://jsonfeed.org/version/1";
+
 		public static T GetValue<T>(this IDictionary<string, object> json, string key) where T : class
 		{
 			if (json.TryGetValue(key, out object value))

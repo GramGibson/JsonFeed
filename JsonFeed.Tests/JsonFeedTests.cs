@@ -31,7 +31,7 @@ namespace JsonFeed.Tests
 		{
 			var json = new Dictionary<string, object>
 			{
-				{ "version", JsonFeed.Version },
+				{ "version", Extensions.CurrentJsonFeedVersion },
 				{ "title", "" },
 			};
 
@@ -48,7 +48,7 @@ namespace JsonFeed.Tests
 		{
 			var json = new Dictionary<string, object>
 			{
-				{ "version", JsonFeed.Version },
+				{ "version", Extensions.CurrentJsonFeedVersion },
 				{ "title", "Feed Title" },
 			};
 
@@ -102,7 +102,7 @@ namespace JsonFeed.Tests
 		[Fact]
 		public void InvalidFeedWontSerialize()
 		{
-			var feed = new Feed();
+			var feed = new JsonFeed();
 
 			var ex = Assert.Throws<ArgumentException>(() =>
 			{
@@ -111,7 +111,7 @@ namespace JsonFeed.Tests
 
 			Assert.Equal("Invalid version", ex.Message);
 
-			feed.Version = JsonFeed.Version;
+			feed.Version = Extensions.CurrentJsonFeedVersion;
 
 			ex = Assert.Throws<ArgumentException>(() =>
 			{
