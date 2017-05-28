@@ -2,10 +2,10 @@
 <package >
 	<metadata>
 		<id>JsonFeed</id>
-		<version>1.0.0</version>
+		<version>1.0.1</version>
 		<title>JsonFeed</title>
 		<authors>Gram Gibson</authors>
-		<owners>Gram GIbson</owners>
+		<owners>Gram Gibson</owners>
 		<projectUrl>https://github.com/gramgibson/JsonFeed</projectUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<description>C# parsing for JsonFeed.org feeds</description>
