@@ -1,7 +1,9 @@
-# JsonFeed 1.0.1
+# JsonFeed 1.0.2
 C# parsing for [JsonFeed.org](https://jsonfeed.org) feeds
 
-## Nuget
+[![NuGet](https://img.shields.io/nuget/v/JsonFeed.svg)](https://www.nuget.org/packages/JsonFeed)
+
+## Install
 
 JsonFeed is available on [NuGet](https://www.nuget.org/packages/JsonFeed/):
 
@@ -11,18 +13,17 @@ Install-Package JsonFeed
 
 ## Usage
 
-Load a JSON string from an HTTP call and use the static `JsonFeed.Parse` method to get an instance of `JsonFeed`.
+Load a feed by URL using `JsonFeed.Load`:
 
 ```csharp
-var feedUrl = "https://jsonfeed.org/feed.json";
-var client = new HttpClient();
-var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, feedUrl);
-var httpResponseMessage = await client.SendAsync(httpRequestMessage);
-var byteArray = await httpResponseMessage.Content.ReadAsByteArrayAsync();
-var response = Encoding.UTF8.GetString(byteArray, 0, byteArray.Length);
+var url = "https://jsonfeed.org/feed.json";
+var jsonFeed = JsonFeed.Load(url);
+```
 
-// parse an instance of JsonFeed from the HTTP response
-var jsonFeed = JsonFeed.Parse(response);
+Parse a JSON string using `JsonFeed.Parse`:
+
+```csharp
+var jsonFeed = JsonFeed.Parse(jsonString);
 ```
 
 #### More examples and documentation coming soon
