@@ -6,19 +6,74 @@ namespace JsonFeed
 {
 	public class FeedItem
 	{
+		/// <summary>
+		/// Unique ID for the item
+		/// </summary>
 		public string Id { get; set; }
+
+		/// <summary>
+		/// The URL of the resource described by the item
+		/// </summary>
 		public string Url { get; set; }
+
+		/// <summary>
+		/// The URL of a page elsewhere
+		/// </summary>
 		public string ExternalUrl { get; set; }
+
+		/// <summary>
+		/// The title of the item
+		/// </summary>
 		public string Title { get; set; }
+
+		/// <summary>
+		/// The HTML of the item
+		/// </summary>
 		public string ContentHtml { get; set; }
+		
+		/// <summary>
+		/// The plain text of the item
+		/// </summary>
 		public string ContentText { get; set; }
+
+		/// <summary>
+		/// A plain text sentence or two describing the item
+		/// </summary>
 		public string Summary { get; set; }
+
+		/// <summary>
+		/// The URL of the main image for the item
+		/// </summary>
 		public string Image { get; set; }
+
+		/// <summary>
+		/// The URL of an image to use as a banner
+		/// </summary>
 		public string BannerImage { get; set; }
+
+		/// <summary>
+		/// Date the item was published
+		/// </summary>
 		public DateTime? DatePublished { get; set; }
+
+		/// <summary>
+		/// Date the item was modified
+		/// </summary>
 		public DateTime? DateModified { get; set; }
+
+		/// <summary>
+		/// The author of the item
+		/// </summary>
 		public Author Author { get; set; }
+
+		/// <summary>
+		/// Tags for the item
+		/// </summary>
 		public IEnumerable<string> Tags { get; set; }
+
+		/// <summary>
+		/// Attachments for the item
+		/// </summary>
 		public IEnumerable<Attachment> Attachments { get; set; }
 
 		public FeedItem()

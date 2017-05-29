@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -146,6 +147,27 @@ namespace JsonFeed.Tests
 			Assert.Equal(null, feed.Title);
 			Assert.Equal(0, feed.Items.Count());
 			Assert.Equal("JSON Feed is a pragmatic syndication format for blogs, microblogs, and other time-based content.", feed.Description);
+		}
+
+		[Fact]
+		public void LoadByUrl()
+		{
+			var feed = JsonFeed.Load("https://jsonfeed.org/feed.json").Result;
+
+			Assert.NotNull(feed.Version);
+			Assert.NotNull(feed.Title);
+			Assert.NotEmpty(feed.Items);
+		}
+
+		[Fact]
+		public void LoadByUrlModifyRequest()
+		{
+			var feed = JsonFeed.Load("https://jsonfeed.org/feed.json", (req) =>
+			{
+				req.Method = HttpMethod.Put; // method not allowed
+			}).Result;
+
+			Assert.Null(feed);
 		}
 	}
 }

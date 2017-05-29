@@ -4,7 +4,14 @@ namespace JsonFeed
 {
 	public class Hub
 	{
+		/// <summary>
+		/// Type of the hub
+		/// </summary>
 		public string Type { get; set; }
+
+		/// <summary>
+		/// URL of the hub
+		/// </summary>
 		public string Url { get; set; }
 
 		public Hub()
