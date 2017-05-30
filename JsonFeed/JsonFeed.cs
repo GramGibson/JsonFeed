@@ -74,6 +74,11 @@ namespace JsonFeed
 		public IEnumerable<FeedItem> Items { get; set; }
 
 		/// <summary>
+		/// Dictionary containing custom feed objects, as prefixed by _
+		/// </summary>
+		public IDictionary<string, object> CustomObjects { get; set; }
+
+		/// <summary>
 		/// Load a <c>JsonFeed</c> by URL
 		/// </summary>
 		/// <param name="url">URL of the feed</param>
@@ -155,14 +160,23 @@ namespace JsonFeed
 				NextUrl = json.GetValue<string>("next_url"),
 				Icon = json.GetValue<string>("icon"),
 				Favicon = json.GetValue<string>("favicon"),
-				Expired = json.GetValue<string>("expired") == "true"
+				Expired = json.GetValue<string>("expired") == "true",
+				Hubs = Enumerable.Empty<Hub>(),
+				Items = Enumerable.Empty<FeedItem>(),
+				CustomObjects = new Dictionary<string, object>()
 			};
 
+			//
+			// assign Author
+			//
 			if (json.ContainsKey("author"))
 			{
 				feed.Author = new Author(json.GetValue<IDictionary<string, object>>("author"));
 			}
 
+			//
+			// assign Hubs
+			//
 			if (json.ContainsKey("hubs"))
 			{
 				var hubsJson = json.GetList<IDictionary<string, object>>("hubs");
@@ -179,6 +193,9 @@ namespace JsonFeed
 				}
 			}
 
+			//
+			// assign FeedItems
+			//
 			var itemsJson = json.GetList<IDictionary<string, object>>("items");
 
 			if (strictParsing)
@@ -190,6 +207,19 @@ namespace JsonFeed
 			else
 			{
 				feed.Items = itemsJson.Select(s => new FeedItem(s));
+			}
+
+			// assign CustomObjects
+			if (json.Keys.Any(w => w.StartsWith("_")))
+			{
+				var customObjects = new Dictionary<string, object>();
+
+				foreach (var key in json.Keys.Where(w => w.StartsWith("_")))
+				{
+					customObjects[key] = json[key];
+				}
+
+				feed.CustomObjects = customObjects;
 			}
 
 			return feed;

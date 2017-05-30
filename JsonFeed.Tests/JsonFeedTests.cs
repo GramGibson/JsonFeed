@@ -169,5 +169,56 @@ namespace JsonFeed.Tests
 
 			Assert.Null(feed);
 		}
+
+		[Fact]
+		public void CustomObjects()
+		{
+			var file = File.ReadAllText("../../Feeds/customfields.json");
+			var feed = JsonFeed.Parse(file);
+
+			Assert.NotEmpty(feed.CustomObjects);
+			Assert.Equal("_blue_shed", feed.CustomObjects.FirstOrDefault(w => w.Key == "_blue_shed").Key);
+
+			var value = feed.CustomObjects.FirstOrDefault(w => w.Key == "_blue_shed").Value as IDictionary<string, object>;
+
+			Assert.Equal("https://blueshed-podcasts.com/json-feed-extension-docs", value.FirstOrDefault(w => w.Key == "about").Value);
+			Assert.Equal(false, value.FirstOrDefault(w => w.Key == "explicit").Value);
+			Assert.Equal("1948 by George Orwell", value.FirstOrDefault(w => w.Key == "copyright").Value);
+			Assert.Equal("Big Brother and the Holding Company", value.FirstOrDefault(w => w.Key == "owner").Value);
+			Assert.Equal("All shouting, all the time. Double. Plus. Good.", value.FirstOrDefault(w => w.Key == "subtitle").Value);
+		}
+
+		[Fact]
+		public void CustomObjectsNested()
+		{
+			var file = File.ReadAllText("../../Feeds/customfields.json");
+			var feed = JsonFeed.Parse(file);
+
+			Assert.NotEmpty(feed.CustomObjects);
+			Assert.Equal("_nested", feed.CustomObjects.FirstOrDefault(w => w.Key == "_nested").Key);
+
+			var value = feed.CustomObjects.FirstOrDefault(w => w.Key == "_nested").Value as IDictionary<string, object>;
+			var nested = value.FirstOrDefault(w => w.Key == "contributing_author").Value as IDictionary<string, object>;
+
+			Assert.Equal("Author Name", nested.FirstOrDefault(w => w.Key == "name").Value);
+		}
+
+		[Fact]
+		public void CustomObjectsEmpty()
+		{
+			var file = File.ReadAllText("../../Feeds/jsonfeed.json");
+			var feed = JsonFeed.Parse(file);
+
+			Assert.Empty(feed.CustomObjects);
+		}
+
+		[Fact]
+		public void CustomObjectsDontExist()
+		{
+			var file = File.ReadAllText("../../Feeds/jsonfeed.json");
+			var feed = JsonFeed.Parse(file);
+
+			Assert.Null(feed.CustomObjects.GetValue<object>("_non_existent_key"));
+		}
 	}
 }

@@ -69,6 +69,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Feeds\customfields.json" />
     <None Include="Feeds\invalid.json" />
     <None Include="Feeds\jsonfeed.json" />
     <None Include="Feeds\timetable.json" />
